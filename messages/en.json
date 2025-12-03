@@ -1,0 +1,124 @@
+{
+  "common": {
+    "title": "One Million Volunteers",
+    "subtitle": "Five-Day Relief Camp Registration",
+    "description": "Application to register volunteers for the Five-day Relief Camp as the next phase of the series of program organized by the National Youth Services Council (NYSC) to restore the lives of survivors affected by the disaster situation.",
+    "submit": "Submit Application",
+    "required": "Required",
+    "select": "Select an option",
+    "loading": "Loading...",
+    "success": "Success!",
+    "error": "Error"
+  },
+  "navigation": {
+    "home": "Home",
+    "register": "Register",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "communityImpactTitle": "Community Impact",
+    "communityImpactDesc": "Unite communities and create lasting positive change across Sri Lanka",
+    "disasterReliefTitle": "Disaster Relief",
+    "disasterReliefDesc": "Provide critical support and aid to those affected by disasters",
+    "makeDifferenceTitle": "Make a Difference",
+    "makeDifferenceDesc": "Transform lives through dedicated service and meaningful action",
+    "targetVolunteers": "Target Volunteers",
+    "districts": "Districts",
+    "reliefCamp": "Relief Camp"
+  },
+  "form": {
+    "personalInfo": "Personal Information",
+    "volunteerInfo": "Volunteer Information",
+    "name": "Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email Address",
+    "emailPlaceholder": "your.email@example.com",
+    "whatsapp": "WhatsApp Number",
+    "whatsappPlaceholder": "+94 XX XXX XXXX",
+    "ageRange": "Age Range",
+    "ageOptions": {
+      "18-20": "18-20 years",
+      "20-30": "20-30 years",
+      "30-40": "30-40 years"
+    },
+    "sex": "Sex",
+    "sexOptions": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other"
+    },
+    "district": "Current Residential District",
+    "districtPlaceholder": "Enter your district",
+    "volunteerType": "Type of Volunteering",
+    "volunteerTypeOptions": {
+      "cleaning": "Cleaning labor",
+      "supplies": "Supply cleaning materials",
+      "counseling": "Psychological counseling",
+      "entertainment": "Entertainment performances",
+      "transportation": "Transportation",
+      "medical": "Medical services",
+      "appliances": "Household appliances",
+      "wellCleaning": "Well/public space cleaning",
+      "medicine": "Medicine supply",
+      "technical": "Technical services",
+      "social": "Social media outreach"
+    },
+    "startDate": "Preferred Start Date",
+    "duration": "Duration of Attendance",
+    "durationOptions": {
+      "1": "1 day",
+      "2": "2 days",
+      "3": "3 days",
+      "4": "4 days",
+      "full": "Full session (5 days)"
+    },
+    "availableDistricts": "Districts Available to Join",
+    "selectMultiple": "Select all districts you can volunteer in",
+    "successMessage": "Thank you for registering! We will contact you via WhatsApp soon.",
+    "errorMessage": "Something went wrong. Please try again."
+  },
+  "districts": {
+    "colombo": "Colombo",
+    "gampaha": "Gampaha",
+    "kalutara": "Kalutara",
+    "kandy": "Kandy",
+    "matale": "Matale",
+    "nuwara_eliya": "Nuwara Eliya",
+    "galle": "Galle",
+    "matara": "Matara",
+    "hambantota": "Hambantota",
+    "jaffna": "Jaffna",
+    "kilinochchi": "Kilinochchi",
+    "mannar": "Mannar",
+    "vavuniya": "Vavuniya",
+    "mullaitivu": "Mullaitivu",
+    "batticaloa": "Batticaloa",
+    "ampara": "Ampara",
+    "trincomalee": "Trincomalee",
+    "kurunegala": "Kurunegala",
+    "puttalam": "Puttalam",
+    "anuradhapura": "Anuradhapura",
+    "polonnaruwa": "Polonnaruwa",
+    "badulla": "Badulla",
+    "moneragala": "Moneragala",
+    "ratnapura": "Ratnapura",
+    "kegalle": "Kegalle"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "address": "National Youth Services Council, No 65, High Level Rd, Maharagama",
+    "email": "onemillionvolunteer@nysc.lk",
+    "phone": "0701553202"
+  },
+  "footer": {
+    "madeWith": "Made with",
+    "by": "by",
+    "rights": "© 2025 National Youth Services Council. All rights reserved.",
+    "contactTitle": "Contact Us",
+    "aboutTitle": "About NYSC",
+    "aboutDescription": "National Youth Services Council is dedicated to mobilizing and empowering youth to serve communities across Sri Lanka.",
+    "reliefTitle": "Relief Camp",
+    "reliefDescription": "Join our mission to restore the lives of survivors affected by disaster situations. Your contribution can make a significant difference."
+  }
+}
