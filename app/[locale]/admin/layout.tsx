@@ -79,7 +79,7 @@ export default function AdminLayout({
           <div className="flex h-16 items-center gap-3 border-b px-4">
             <div className="relative h-12 w-24">
               <Image
-                src="/images/1 million logo-01.png"
+                src="/images/1-million-logo.png"
                 alt="One Million Volunteers"
                 fill
                 sizes="96px"
@@ -134,7 +134,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-2">
             <div className="relative h-10 w-20">
               <Image
-                src="/images/1 million logo-01.png"
+                src="/images/1-million-logo.png"
                 alt="One Million Volunteers"
                 fill
                 sizes="80px"

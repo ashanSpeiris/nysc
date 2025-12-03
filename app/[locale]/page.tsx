@@ -38,7 +38,7 @@ export default function Home() {
               <div className="flex justify-center mb-6">
                 <div className="relative h-32 w-64 md:h-48 md:w-96">
                   <Image
-                    src="/images/1 million logo-01.png"
+                    src="/images/1-million-logo.png"
                     alt="One Million Volunteers"
                     fill
                     sizes="(max-width: 768px) 256px, 384px"
