@@ -119,10 +119,6 @@ export default function AdminLoginPage() {
             >
               {isLoading ? 'Logging in...' : 'Login to Admin Portal'}
             </Button>
-
-            <p className="text-center text-xs text-muted-foreground mt-4">
-              Authorized personnel only. Unauthorized access is prohibited.
-            </p>
           </form>
         </CardContent>
       </Card>

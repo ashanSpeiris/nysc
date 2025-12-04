@@ -34,6 +34,7 @@ import { DISTRICTS, VOLUNTEER_TYPES } from '@/lib/constants';
 
 interface Volunteer {
   id: string;
+  displayId: number;
   name: string;
   email: string;
   whatsapp: string;
@@ -257,7 +258,9 @@ export default function VolunteersListPage() {
                 ) : (
                   volunteers.map((volunteer) => (
                     <TableRow key={volunteer.id}>
-                      <TableCell className="font-medium">#{volunteer.id}</TableCell>
+                      <TableCell className="font-medium">
+                        #{volunteer.displayId.toString().padStart(7, '0')}
+                      </TableCell>
                       <TableCell>
                         <div>
                           <p className="font-medium">{volunteer.name}</p>

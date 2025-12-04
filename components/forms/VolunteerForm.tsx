@@ -3,9 +3,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Loader2, CheckCircle2, AlertCircle, PartyPopper } from 'lucide-react';
 import { Confetti } from '@/components/ui/confetti';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -42,6 +43,8 @@ export function VolunteerForm() {
   const td = useTranslations('districts');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const form = useForm<VolunteerFormData>({
     resolver: zodResolver(volunteerFormSchema),
@@ -59,16 +62,26 @@ export function VolunteerForm() {
     setSubmitStatus('idle');
 
     try {
-      // TODO: Replace with actual API call
+      // Verify reCAPTCHA token
+      if (!recaptchaToken) {
+        throw new Error('Please complete the reCAPTCHA verification');
+      }
+
       const response = await fetch('/api/volunteer/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          recaptchaToken,
+        }),
       });
 
       if (!response.ok) throw new Error('Submission failed');
 
       setSubmitStatus('success');
+      // Reset reCAPTCHA
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
       form.reset();
     } catch (error) {
       console.error('Form submission error:', error);
@@ -404,12 +417,25 @@ export function VolunteerForm() {
               </div>
             )}
 
+            {/* reCAPTCHA */}
+            <div className="flex justify-center">
+              <div className="recaptcha-container">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+                  onChange={(token) => setRecaptchaToken(token)}
+                  onExpired={() => setRecaptchaToken(null)}
+                  theme="light"
+                />
+              </div>
+            </div>
+
             {/* Submit Button */}
             <Button
               type="submit"
               size="lg"
               className="w-full h-12 text-base font-semibold"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !recaptchaToken}
             >
               {isSubmitting ? (
                 <>

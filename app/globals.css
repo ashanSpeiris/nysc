@@ -149,3 +149,24 @@
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* reCAPTCHA Liquid Glass Styling */
+.recaptcha-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+}
+
+.recaptcha-container > div {
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.recaptcha-container iframe {
+  border-radius: 8px !important;
+}

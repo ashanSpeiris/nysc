@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
 
     type VolunteerExport = {
       id: string;
+      displayId: number;
       name: string;
       email: string;
       whatsapp: string;
@@ -83,7 +84,7 @@ export async function GET(request: NextRequest) {
     ];
 
     const rows = volunteers.map((v: VolunteerExport) => [
-      v.id,
+      v.displayId.toString().padStart(7, '0'),
       v.name,
       v.email || 'N/A',
       v.whatsapp,

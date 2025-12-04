@@ -13,6 +13,7 @@ datasource db {
 // Volunteer registration model
 model Volunteer {
   id                  String   @id @default(cuid())
+  displayId           Int      @default(autoincrement()) @unique // Sequential display ID
   name                String
   email               String
   whatsapp            String
@@ -33,6 +34,7 @@ model Volunteer {
   @@index([volunteerType])
   @@index([createdAt])
   @@index([status])
+  @@index([displayId])
   @@map("volunteers")
 }
 

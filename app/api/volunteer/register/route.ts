@@ -27,9 +27,44 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const { recaptchaToken, ...formData } = body;
+
+    // Verify reCAPTCHA token
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'reCAPTCHA verification is required',
+        },
+        { status: 400 }
+      );
+    }
+
+    const recaptchaResponse = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
+      }
+    );
+
+    const recaptchaResult = await recaptchaResponse.json();
+
+    if (!recaptchaResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'reCAPTCHA verification failed. Please try again.',
+        },
+        { status: 400 }
+      );
+    }
 
     // Validate the request body
-    const validatedData = volunteerFormSchema.parse(body);
+    const validatedData = volunteerFormSchema.parse(formData);
 
     // Save to database
     const volunteer = await prisma.volunteer.create({
