@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
 
     const csvContent = [
       headers.join(','),
-      ...rows.map((row) => row.map(escapeCsvValue).join(',')),
+      ...rows.map((row: any[]) => row.map(escapeCsvValue).join(',')),
     ].join('\r\n');
 
     // Add UTF-8 BOM for Excel compatibility
