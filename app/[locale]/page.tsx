@@ -36,12 +36,12 @@ export default function Home() {
             <div className="mx-auto max-w-5xl">
               {/* Program Logo */}
               <div className="flex justify-center mb-6">
-                <div className="relative h-32 w-64 md:h-48 md:w-96">
+                <div className="relative h-40 w-80 md:h-64 md:w-[32rem]">
                   <Image
                     src="/images/1-million-logo.png"
                     alt="One Million Volunteers"
                     fill
-                    sizes="(max-width: 768px) 256px, 384px"
+                    sizes="(max-width: 768px) 320px, 512px"
                     className="object-contain drop-shadow-2xl"
                     priority
                     quality={100}
@@ -125,7 +125,7 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground">{th('districts')}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-3xl font-bold text-accent">5 Days</p>
+                    <p className="text-3xl font-bold text-accent">24x7</p>
                     <p className="text-sm text-muted-foreground">{th('reliefCamp')}</p>
                   </div>
                 </div>

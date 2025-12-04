@@ -42,7 +42,7 @@ export const VOLUNTEER_TYPES = [
 
 export const AGE_RANGES = ['18-20', '20-30', '30-40'] as const;
 
-export const SEX_OPTIONS = ['female', 'male', 'other'] as const;
+export const SEX_OPTIONS = ['female', 'male', 'preferNotToSay'] as const;
 
 export const DURATION_OPTIONS = ['1', '2', '3', '4', 'full'] as const;
 

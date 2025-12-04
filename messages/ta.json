@@ -46,7 +46,7 @@
     "sexOptions": {
       "female": "பெண்",
       "male": "ஆண்",
-      "other": "மற்றவை"
+      "preferNotToSay": "சொல்ல முடியாது"
     },
     "district": "குடியிருப்பு மாவட்டம்",
     "districtPlaceholder": "உங்கள் மாவட்டத்தை உள்ளிடவும்",

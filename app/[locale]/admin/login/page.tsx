@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Shield } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -53,15 +54,27 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-3 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Shield className="h-8 w-8 text-primary" />
+      <Card className="w-full max-w-md shadow-xl border-2">
+        <CardHeader className="space-y-4 text-center pb-6">
+          <div className="mx-auto relative h-20 w-32">
+            <Image
+              src="/images/nysc-logo.png"
+              alt="NYSC Logo"
+              fill
+              sizes="128px"
+              className="object-contain"
+              priority
+            />
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-          <CardDescription>
-            National Youth Services Council - Volunteer Portal
-          </CardDescription>
+          <div className="space-y-2">
+            <CardTitle className="text-2xl font-bold text-primary">Admin Portal</CardTitle>
+            <CardDescription className="text-base">
+              National Youth Services Council
+            </CardDescription>
+            <p className="text-sm text-muted-foreground">
+              One Million Volunteers Program
+            </p>
+          </div>
         </CardHeader>
 
         <CardContent>
@@ -101,17 +114,15 @@ export default function AdminLoginPage() {
 
             <Button
               type="submit"
-              className="w-full h-11 text-base"
+              className="w-full h-11 text-base font-semibold"
               disabled={isLoading}
             >
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : 'Login to Admin Portal'}
             </Button>
 
-            <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
-              <p className="font-semibold mb-1">Demo Credentials:</p>
-              <p>Email: admin@nysc.lk</p>
-              <p>Password: admin123</p>
-            </div>
+            <p className="text-center text-xs text-muted-foreground mt-4">
+              Authorized personnel only. Unauthorized access is prohibited.
+            </p>
           </form>
         </CardContent>
       </Card>

@@ -1,8 +1,8 @@
 {
   "common": {
     "title": "One Million Volunteers",
-    "subtitle": "Five-Day Relief Camp Registration",
-    "description": "Application to register volunteers for the Five-day Relief Camp as the next phase of the series of program organized by the National Youth Services Council (NYSC) to restore the lives of survivors affected by the disaster situation.",
+    "subtitle": "Volunteer Registration",
+    "description": "Application to register volunteers for the Relief Camp as the next phase of the series of program organized by the National Youth Services Council (NYSC) to restore the lives of survivors affected by the disaster situation.",
     "submit": "Submit Application",
     "required": "Required",
     "select": "Select an option",
@@ -25,7 +25,7 @@
     "makeDifferenceDesc": "Transform lives through dedicated service and meaningful action",
     "targetVolunteers": "Target Volunteers",
     "districts": "Districts",
-    "reliefCamp": "Relief Camp"
+    "reliefCamp": "Support"
   },
   "form": {
     "personalInfo": "Personal Information",
@@ -46,7 +46,7 @@
     "sexOptions": {
       "female": "Female",
       "male": "Male",
-      "other": "Other"
+      "preferNotToSay": "Rather not say"
     },
     "district": "Current Residential District",
     "districtPlaceholder": "Enter your district",
