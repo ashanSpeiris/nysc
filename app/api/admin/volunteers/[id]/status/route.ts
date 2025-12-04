@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // Check authentication
   const auth = await requireAuth(request);
@@ -16,7 +16,7 @@ export async function PATCH(
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { status } = body;
 
