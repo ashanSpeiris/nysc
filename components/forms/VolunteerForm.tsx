@@ -62,17 +62,13 @@ export function VolunteerForm() {
     setSubmitStatus('idle');
 
     try {
-      // Verify reCAPTCHA token
-      if (!recaptchaToken) {
-        throw new Error('Please complete the reCAPTCHA verification');
-      }
-
+      // reCAPTCHA is optional - will be verified on backend if provided
       const response = await fetch('/api/volunteer/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
-          recaptchaToken,
+          recaptchaToken: recaptchaToken || null,
         }),
       });
 
@@ -435,7 +431,7 @@ export function VolunteerForm() {
               type="submit"
               size="lg"
               className="w-full h-12 text-base font-semibold"
-              disabled={isSubmitting || !recaptchaToken}
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
