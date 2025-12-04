@@ -25,6 +25,7 @@ interface Message {
 export function PhoenixChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -44,6 +45,29 @@ export function PhoenixChat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Observe footer visibility
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsFooterVisible(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of footer is visible
+      }
+    );
+
+    observer.observe(footer);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
@@ -93,8 +117,8 @@ export function PhoenixChat() {
   return (
     <>
       {/* Chat Button */}
-      {!isOpen && (
-        <div className="fixed bottom-6 right-6 z-50">
+      {!isOpen && !isFooterVisible && (
+        <div className="fixed bottom-6 right-6 z-50 transition-opacity duration-300">
           <button
             onClick={() => setIsOpen(true)}
             className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary via-primary to-secondary text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-primary/50"
@@ -115,7 +139,7 @@ export function PhoenixChat() {
       )}
 
       {/* Chat Window */}
-      {isOpen && (
+      {isOpen && !isFooterVisible && (
         <Card
           className={`fixed bottom-6 right-6 z-50 flex flex-col shadow-2xl border-2 border-primary/20 transition-all duration-300 ${
             isMinimized
