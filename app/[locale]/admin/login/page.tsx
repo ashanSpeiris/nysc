@@ -22,17 +22,29 @@ export default function AdminLoginPage() {
     setError('');
     setIsLoading(true);
 
-    // TODO: Replace with actual authentication
-    // For now, simple demo credentials
-    if (email === 'admin@nysc.lk' && password === 'admin123') {
-      // Set a simple session flag (in production, use proper auth)
-      localStorage.setItem('admin_authenticated', 'true');
-      router.push('/en/admin');
-    } else {
-      setError('Invalid email or password');
-    }
+    try {
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setIsLoading(false);
+      const data = await response.json();
+
+      if (data.success) {
+        // Login successful, redirect to dashboard
+        router.push('/en/admin');
+      } else {
+        setError(data.message || 'Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
