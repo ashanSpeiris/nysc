@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
       count: volunteers.length,
       total,
       page,
-      volunteers: volunteers.map(v => ({ id: v.id, name: v.name }))
+      volunteers: volunteers.map((v: any) => ({ id: v.id, name: v.name }))
     });
 
     const response = {
