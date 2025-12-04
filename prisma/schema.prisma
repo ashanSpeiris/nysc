@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Volunteer registration model
+model Volunteer {
+  id                  String   @id @default(cuid())
+  name                String
+  email               String
+  whatsapp            String
+  ageRange            String
+  sex                 String
+  district            String
+  volunteerType       String
+  startDate           DateTime
+  duration            String
+  availableDistricts  String[] // Array of district codes
+
+  // Metadata
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  status              String   @default("pending") // pending, approved, rejected
+
+  @@index([district])
+  @@index([volunteerType])
+  @@index([createdAt])
+  @@index([status])
+  @@map("volunteers")
+}
+
+// Admin users model
+model Admin {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // Hashed password
+  name          String
+  role          String    @default("admin") // admin, super_admin
+
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  @@map("admins")
+}
+
+// Session model for authentication
+model Session {
+  id            String   @id @default(cuid())
+  adminId       String
+  token         String   @unique
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  @@index([token])
+  @@index([adminId])
+  @@map("sessions")
+}
