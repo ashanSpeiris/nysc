@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
       sameSite: 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? 'volunteer.nysc.lk' : undefined,
     });
 
     return response;
