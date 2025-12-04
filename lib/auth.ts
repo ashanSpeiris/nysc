@@ -16,7 +16,12 @@ export async function verifyAdminSession(
   request: NextRequest
 ): Promise<AuthenticatedAdmin | null> {
   try {
+    // Debug: Log all cookies
+    const allCookies = request.cookies.getAll();
+    console.log('🔍 All cookies received:', allCookies);
+
     const token = request.cookies.get('session')?.value;
+    console.log('🔍 Session token:', token ? 'Found' : 'Not found');
 
     if (!token) {
       return null;

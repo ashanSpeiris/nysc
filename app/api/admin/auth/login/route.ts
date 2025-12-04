@@ -100,14 +100,19 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    response.cookies.set('session', token, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Secure cookies in production (HTTPS)
-      sameSite: 'lax',
+      sameSite: 'lax' as const,
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
       domain: process.env.NODE_ENV === 'production' ? 'volunteer.nysc.lk' : undefined,
-    });
+    };
+
+    console.log('🍪 Setting cookie with options:', cookieOptions);
+    console.log('🍪 Environment:', process.env.NODE_ENV);
+
+    response.cookies.set('session', token, cookieOptions);
 
     return response;
   } catch (error) {
