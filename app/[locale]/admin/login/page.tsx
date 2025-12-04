@@ -34,8 +34,12 @@ export default function AdminLoginPage() {
       const data = await response.json();
 
       if (data.success) {
+        // Set authentication flag for layout compatibility
+        localStorage.setItem('admin_authenticated', 'true');
         // Login successful, redirect to dashboard
         router.push('/en/admin');
+        // Force hard refresh to ensure layout picks up auth state
+        setTimeout(() => window.location.href = '/en/admin', 100);
       } else {
         setError(data.message || 'Invalid email or password');
       }

@@ -39,9 +39,16 @@ export default function AdminLayout({
     setIsLoading(false);
   }, [pathname, router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Call backend logout API
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    // Clear localStorage and redirect
     localStorage.removeItem('admin_authenticated');
-    router.push('/en/admin/login');
+    window.location.href = '/en/admin/login';
   };
 
   // Show login page without layout
