@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       sameSite: 'lax' as const,
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? 'volunteer.nysc.lk' : undefined,
+      // Remove explicit domain - let browser handle it
     };
 
     console.log('🍪 Setting cookie with options:', cookieOptions);
