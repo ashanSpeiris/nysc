@@ -29,30 +29,38 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { recaptchaToken, ...formData } = body;
 
-    // Verify reCAPTCHA token only if provided (optional for now)
-    if (recaptchaToken) {
-      const recaptchaResponse = await fetch(
-        `https://www.google.com/recaptcha/api/siteverify`,
+    // Verify reCAPTCHA token (required)
+    if (!recaptchaToken) {
+      return NextResponse.json(
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
-        }
+          success: false,
+          message: 'reCAPTCHA verification is required',
+        },
+        { status: 400 }
       );
+    }
 
-      const recaptchaResult = await recaptchaResponse.json();
-
-      if (!recaptchaResult.success) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: 'reCAPTCHA verification failed. Please try again.',
-          },
-          { status: 400 }
-        );
+    const recaptchaResponse = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
       }
+    );
+
+    const recaptchaResult = await recaptchaResponse.json();
+
+    if (!recaptchaResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'reCAPTCHA verification failed. Please try again.',
+        },
+        { status: 400 }
+      );
     }
 
     // Validate the request body
