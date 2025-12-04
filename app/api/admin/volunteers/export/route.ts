@@ -49,6 +49,22 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     });
 
+    type VolunteerExport = {
+      id: string;
+      name: string;
+      email: string;
+      whatsapp: string;
+      ageRange: string;
+      sex: string;
+      district: string;
+      volunteerType: string;
+      startDate: Date;
+      duration: string;
+      availableDistricts: string[];
+      status: string;
+      createdAt: Date;
+    };
+
     // Generate CSV
     const headers = [
       'ID',
@@ -66,7 +82,7 @@ export async function GET(request: NextRequest) {
       'Registered On',
     ];
 
-    const rows = volunteers.map((v) => [
+    const rows = volunteers.map((v: VolunteerExport) => [
       v.id,
       v.name,
       v.email || 'N/A',
