@@ -37,10 +37,11 @@ export const metadata: Metadata = {
     description: 'මිලියනයක ස්වේච්ඡා තරුණ බලකායට ඔබත් එකතු වන්න....! ஒரு மில்லியன் தன்னார்வ இளைஞர் படையில் இணைய உங்களுக்கும் ஒரு சந்தர்ப்பம்....! An Opportunity for You to Join the Million Volunteer Youth Corps....!',
     images: [`${siteUrl}/images/volunteers_meta.jpg`],
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export function generateStaticParams() {
