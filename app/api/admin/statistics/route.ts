@@ -32,13 +32,23 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    type VolunteerStats = {
+      volunteerType: string;
+      district: string;
+      ageRange: string;
+      sex: string;
+      duration: string;
+      status: string;
+      createdAt: Date;
+    };
+
     const totalVolunteers = volunteers.length;
 
     // Calculate statistics
 
     // 1. Volunteer Type Distribution
     const volunteerTypeCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       volunteerTypeCount[v.volunteerType] =
         (volunteerTypeCount[v.volunteerType] || 0) + 1;
     });
@@ -48,7 +58,7 @@ export async function GET(request: NextRequest) {
 
     // 2. District Distribution
     const districtCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       districtCount[v.district] = (districtCount[v.district] || 0) + 1;
     });
     const districtStats = Object.entries(districtCount)
@@ -58,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     // 3. Age Distribution
     const ageCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       ageCount[v.ageRange] = (ageCount[v.ageRange] || 0) + 1;
     });
     const ageStats = Object.entries(ageCount).map(([range, count]) => ({
@@ -68,7 +78,7 @@ export async function GET(request: NextRequest) {
 
     // 4. Gender Distribution
     const sexCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       sexCount[v.sex] = (sexCount[v.sex] || 0) + 1;
     });
     const sexStats = Object.entries(sexCount).map(([sex, count]) => ({
@@ -78,7 +88,7 @@ export async function GET(request: NextRequest) {
 
     // 5. Duration Preference
     const durationCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       const key =
         v.duration === 'full'
           ? 'Full session (5 days)'
@@ -113,7 +123,7 @@ export async function GET(request: NextRequest) {
       const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
       const count = volunteers.filter(
-        (v) => v.createdAt >= monthStart && v.createdAt <= monthEnd
+        (v: VolunteerStats) => v.createdAt >= monthStart && v.createdAt <= monthEnd
       ).length;
 
       monthlyStats.push({
@@ -124,7 +134,7 @@ export async function GET(request: NextRequest) {
 
     // 7. Status Distribution
     const statusCount: Record<string, number> = {};
-    volunteers.forEach((v) => {
+    volunteers.forEach((v: VolunteerStats) => {
       statusCount[v.status] = (statusCount[v.status] || 0) + 1;
     });
     const statusStats = Object.entries(statusCount).map(([status, count]) => ({
@@ -139,11 +149,11 @@ export async function GET(request: NextRequest) {
     const prevMonthEnd = new Date(now.getFullYear(), now.getMonth() - 1, 0);
 
     const lastMonthCount = volunteers.filter(
-      (v) => v.createdAt >= lastMonthStart && v.createdAt <= lastMonthEnd
+      (v: VolunteerStats) => v.createdAt >= lastMonthStart && v.createdAt <= lastMonthEnd
     ).length;
 
     const prevMonthCount = volunteers.filter(
-      (v) => v.createdAt >= prevMonthStart && v.createdAt <= prevMonthEnd
+      (v: VolunteerStats) => v.createdAt >= prevMonthStart && v.createdAt <= prevMonthEnd
     ).length;
 
     const growthRate =
