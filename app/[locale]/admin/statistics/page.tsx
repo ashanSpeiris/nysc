@@ -2,9 +2,9 @@
 
 export const dynamic = 'force-dynamic';
 
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { DISTRICTS, VOLUNTEER_TYPES } from '@/lib/constants';
 import {
   BarChart3,
   TrendingUp,
@@ -14,45 +14,71 @@ import {
   PieChart,
 } from 'lucide-react';
 
+interface Statistics {
+  overview: {
+    totalVolunteers: number;
+    activeDistricts: number;
+    serviceTypes: number;
+    growthRate: number;
+  };
+  volunteerTypeStats: { type: string; count: number }[];
+  districtStats: { district: string; count: number }[];
+  ageStats: { range: string; count: number }[];
+  sexStats: { sex: string; count: number }[];
+  durationStats: { duration: string; count: number }[];
+  monthlyStats: { month: string; count: number }[];
+  statusStats?: { status: string; count: number }[];
+}
+
 export default function StatisticsPage() {
-  // TODO: Replace with actual database queries
-  const volunteerTypeStats = VOLUNTEER_TYPES.map((type) => ({
-    type,
-    count: Math.floor(Math.random() * 200) + 50,
-  })).sort((a, b) => b.count - a.count);
+  const [stats, setStats] = useState<Statistics | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const districtStats = DISTRICTS.slice(0, 10).map((district) => ({
-    district,
-    count: Math.floor(Math.random() * 150) + 30,
-  })).sort((a, b) => b.count - a.count);
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        const response = await fetch('/api/admin/statistics');
+        const data = await response.json();
 
-  const ageStats = [
-    { range: '18-20', count: 342 },
-    { range: '20-30', count: 687 },
-    { range: '30-40', count: 218 },
-  ];
+        if (data.success) {
+          setStats(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const sexStats = [
-    { sex: 'Male', count: 645 },
-    { sex: 'Female', count: 512 },
-    { sex: 'Other', count: 90 },
-  ];
+    fetchStatistics();
+  }, []);
 
-  const monthlyStats = [
-    { month: 'Oct', count: 125 },
-    { month: 'Nov', count: 287 },
-    { month: 'Dec', count: 835 },
-  ];
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <p className="text-muted-foreground">Loading statistics...</p>
+      </div>
+    );
+  }
 
-  const durationStats = [
-    { duration: '1 day', count: 112 },
-    { duration: '2 days', count: 156 },
-    { duration: '3 days', count: 187 },
-    { duration: '4 days', count: 168 },
-    { duration: 'Full session (5 days)', count: 624 },
-  ];
+  if (!stats) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <p className="text-muted-foreground">Failed to load statistics</p>
+      </div>
+    );
+  }
 
-  const totalVolunteers = 1247;
+  const {
+    overview,
+    volunteerTypeStats,
+    districtStats,
+    ageStats,
+    sexStats,
+    durationStats,
+    monthlyStats,
+  } = stats;
+
   const maxCount = Math.max(...volunteerTypeStats.map((s) => s.count));
 
   return (
@@ -75,7 +101,7 @@ export default function StatisticsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{totalVolunteers}</div>
+            <div className="text-3xl font-bold">{overview.totalVolunteers}</div>
           </CardContent>
         </Card>
 
@@ -87,7 +113,7 @@ export default function StatisticsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{DISTRICTS.length}</div>
+            <div className="text-3xl font-bold">{overview.activeDistricts}</div>
           </CardContent>
         </Card>
 
@@ -99,7 +125,7 @@ export default function StatisticsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{VOLUNTEER_TYPES.length}</div>
+            <div className="text-3xl font-bold">{overview.serviceTypes}</div>
           </CardContent>
         </Card>
 
@@ -111,7 +137,9 @@ export default function StatisticsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">+23%</div>
+            <div className={`text-3xl font-bold ${overview.growthRate >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {overview.growthRate > 0 ? '+' : ''}{overview.growthRate}%
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -205,7 +233,7 @@ export default function StatisticsPage() {
                       <div
                         className="h-full bg-accent transition-all"
                         style={{
-                          width: `${(stat.count / totalVolunteers) * 100}%`,
+                          width: `${(stat.count / overview.totalVolunteers) * 100}%`,
                         }}
                       />
                     </div>
@@ -237,7 +265,7 @@ export default function StatisticsPage() {
                       <div
                         className="h-full bg-primary transition-all"
                         style={{
-                          width: `${(stat.count / totalVolunteers) * 100}%`,
+                          width: `${(stat.count / overview.totalVolunteers) * 100}%`,
                         }}
                       />
                     </div>
@@ -294,13 +322,13 @@ export default function StatisticsPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">{stat.duration}</span>
                     <span className="text-sm font-semibold">
-                      {stat.count} ({((stat.count / totalVolunteers) * 100).toFixed(1)}%)
+                      {stat.count} ({((stat.count / overview.totalVolunteers) * 100).toFixed(1)}%)
                     </span>
                   </div>
                   <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full bg-gradient-to-r from-accent to-primary transition-all"
-                      style={{ width: `${(stat.count / totalVolunteers) * 100}%` }}
+                      style={{ width: `${(stat.count / overview.totalVolunteers) * 100}%` }}
                     />
                   </div>
                 </div>

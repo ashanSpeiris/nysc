@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,113 +32,96 @@ import {
 } from 'lucide-react';
 import { DISTRICTS, VOLUNTEER_TYPES } from '@/lib/constants';
 
-// Mock data - TODO: Replace with database query
-const mockVolunteers = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  name: `Volunteer ${i + 1}`,
-  email: `volunteer${i + 1}@example.com`,
-  whatsapp: `+94 ${Math.floor(Math.random() * 900000000 + 100000000)}`,
-  ageRange: ['18-20', '20-30', '30-40'][Math.floor(Math.random() * 3)],
-  sex: ['male', 'female', 'other'][Math.floor(Math.random() * 3)],
-  district: DISTRICTS[Math.floor(Math.random() * DISTRICTS.length)],
-  volunteerType: VOLUNTEER_TYPES[Math.floor(Math.random() * VOLUNTEER_TYPES.length)],
-  startDate: new Date(2025, 11, Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-  duration: ['1', '2', '3', '4', 'full'][Math.floor(Math.random() * 5)],
-  availableDistricts: DISTRICTS.slice(0, Math.floor(Math.random() * 5) + 1),
-  createdAt: new Date(2025, 11, Math.floor(Math.random() * 3) + 1).toISOString(),
-}));
+interface Volunteer {
+  id: string;
+  name: string;
+  email: string;
+  whatsapp: string;
+  ageRange: string;
+  sex: string;
+  district: string;
+  volunteerType: string;
+  startDate: string;
+  duration: string;
+  availableDistricts: string[];
+  createdAt: string;
+  status: string;
+}
 
 export default function VolunteersListPage() {
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [districtFilter, setDistrictFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Filter volunteers
-  const filteredVolunteers = mockVolunteers.filter((volunteer) => {
-    const matchesSearch =
-      volunteer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      volunteer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      volunteer.whatsapp.includes(searchTerm);
+  // Fetch volunteers from API
+  const fetchVolunteers = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString(),
+        search: searchTerm,
+        district: districtFilter,
+        volunteerType: typeFilter,
+      });
 
-    const matchesDistrict =
-      districtFilter === 'all' || volunteer.district === districtFilter;
+      const response = await fetch(`/api/admin/volunteers?${params}`);
+      const data = await response.json();
 
-    const matchesType =
-      typeFilter === 'all' || volunteer.volunteerType === typeFilter;
+      if (data.success) {
+        setVolunteers(data.data);
+        setTotal(data.pagination.total);
+      }
+    } catch (error) {
+      console.error('Error fetching volunteers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return matchesSearch && matchesDistrict && matchesType;
-  });
+  // Fetch volunteers when filters change
+  useEffect(() => {
+    fetchVolunteers();
+  }, [currentPage, searchTerm, districtFilter, typeFilter]);
 
-  // Pagination
-  const totalPages = Math.ceil(filteredVolunteers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentVolunteers = filteredVolunteers.slice(startIndex, endIndex);
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [searchTerm, districtFilter, typeFilter]);
+
+  const totalPages = Math.ceil(total / itemsPerPage);
 
   // Export to CSV
-  const exportToCSV = () => {
-    const headers = [
-      'ID',
-      'Name',
-      'Email',
-      'WhatsApp',
-      'Age Range',
-      'Sex',
-      'District',
-      'Volunteer Type',
-      'Start Date',
-      'Duration',
-      'Available Districts',
-      'Registered On',
-    ];
+  const exportToCSV = async () => {
+    try {
+      const params = new URLSearchParams({
+        search: searchTerm,
+        district: districtFilter,
+        volunteerType: typeFilter,
+      });
 
-    const csvData = filteredVolunteers.map((v) => [
-      v.id,
-      v.name,
-      v.email || 'N/A',
-      v.whatsapp,
-      v.ageRange,
-      v.sex,
-      v.district.replace('_', ' '),
-      v.volunteerType.replace(/([A-Z])/g, ' $1').trim(),
-      v.startDate,
-      v.duration === 'full' ? 'Full session (5 days)' : `${v.duration} day${v.duration === '1' ? '' : 's'}`,
-      v.availableDistricts.map(d => d.replace('_', ' ')).join('; '),
-      new Date(v.createdAt).toLocaleDateString(),
-    ]);
+      const response = await fetch(`/api/admin/volunteers/export?${params}`);
+      const blob = await response.blob();
 
-    // Create CSV content with UTF-8 BOM for Excel compatibility
-    const csvContent = [
-      headers.join(','),
-      ...csvData.map((row) =>
-        row.map((cell) => {
-          // Escape quotes and wrap in quotes if contains comma, quote, or newline
-          const cellStr = String(cell).replace(/"/g, '""');
-          return cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')
-            ? `"${cellStr}"`
-            : cellStr;
-        }).join(',')
-      ),
-    ].join('\r\n');
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `NYSC-Volunteers-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
 
-    // Add UTF-8 BOM for Excel compatibility
-    const BOM = '\uFEFF';
-    const blob = new Blob([BOM + csvContent], {
-      type: 'text/csv;charset=utf-8;'
-    });
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `NYSC-Volunteers-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-
-    // Clean up
-    setTimeout(() => {
-      window.URL.revokeObjectURL(url);
-    }, 100);
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (error) {
+      console.error('Error exporting volunteers:', error);
+    }
   };
 
   const clearFilters = () => {
@@ -222,7 +205,7 @@ export default function VolunteersListPage() {
           {hasActiveFilters && (
             <div className="mt-4 flex items-center justify-between rounded-lg bg-muted/50 p-3">
               <p className="text-sm text-muted-foreground">
-                Showing {filteredVolunteers.length} of {mockVolunteers.length} volunteers
+                Showing {total} volunteer{total !== 1 ? 's' : ''}
               </p>
               <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-2">
                 <X className="h-4 w-4" />
@@ -252,14 +235,20 @@ export default function VolunteersListPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentVolunteers.length === 0 ? (
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="h-24 text-center">
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : volunteers.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={9} className="h-24 text-center">
                       No volunteers found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  currentVolunteers.map((volunteer) => (
+                  volunteers.map((volunteer) => (
                     <TableRow key={volunteer.id}>
                       <TableCell className="font-medium">#{volunteer.id}</TableCell>
                       <TableCell>
@@ -287,7 +276,7 @@ export default function VolunteersListPage() {
                           {volunteer.volunteerType.replace(/([A-Z])/g, ' $1').trim()}
                         </span>
                       </TableCell>
-                      <TableCell>{volunteer.startDate}</TableCell>
+                      <TableCell>{new Date(volunteer.startDate).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <Badge variant={volunteer.duration === 'full' ? 'default' : 'outline'}>
                           {volunteer.duration === 'full' ? 'Full (5d)' : `${volunteer.duration} day${volunteer.duration === '1' ? '' : 's'}`}
