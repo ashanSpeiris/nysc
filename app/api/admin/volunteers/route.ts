@@ -78,6 +78,13 @@ export async function GET(request: NextRequest) {
       prisma.volunteer.count({ where }),
     ]);
 
+    console.log('📊 Fetched volunteers:', {
+      count: volunteers.length,
+      total,
+      page,
+      volunteers: volunteers.map(v => ({ id: v.id, name: v.name }))
+    });
+
     const response = {
       success: true,
       data: volunteers,

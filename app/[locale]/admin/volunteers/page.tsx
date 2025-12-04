@@ -73,6 +73,13 @@ export default function VolunteersListPage() {
       const response = await fetch(`/api/admin/volunteers?${params}`);
       const data = await response.json();
 
+      console.log('📥 API Response:', {
+        success: data.success,
+        count: data.data?.length,
+        total: data.pagination?.total,
+        volunteers: data.data?.map((v: Volunteer) => ({ id: v.id, name: v.name }))
+      });
+
       if (data.success) {
         setVolunteers(data.data);
         setTotal(data.pagination.total);
